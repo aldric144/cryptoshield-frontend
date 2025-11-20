@@ -9,6 +9,8 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Progress } from '@/components/ui/progress'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
+import { gate, handlePaywallDismissal, incrementWalletScan, incrementReport, type GateResult } from '@/utils/subscriptionGate'
+import { normalizeTierName, type SubscriptionTier } from '@/utils/features'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
@@ -477,8 +479,6 @@ function App() {
   const analyzeVoice = async () => {
     if (!callText.trim()) return
     
-    const hasAccess = await checkFeatureAccess('realtime_voice')
-    if (!hasAccess) return
     
     setIsMonitoring(true)
     const callId = `call-${Date.now()}`
@@ -564,6 +564,16 @@ function App() {
 
   const checkWalletRisk = async () => {
     if (!walletAddress.trim()) return
+    
+    const gateResult = await gate('wallet_risk_check', userId, userSubscription ? normalizeTierName(userSubscription.tier_name) : undefined)
+    if (!gateResult.allowed) {
+      setPaywallFeature('wallet_risk_check')
+      setPaywallMessage(gateResult.upgradeMessage || 'This feature requires a premium subscription.')
+      setShowPaywall(true)
+      return
+    }
+    
+    incrementWalletScan()
     
     addTimelineEvent('Wallet risk check initiated', 'medium', '🪙')
     
@@ -715,16 +725,30 @@ function App() {
   }
 
   const downloadPDF = async (caseFile: CaseFile) => {
-    const hasAccess = await checkFeatureAccess('pdf_export')
-    if (!hasAccess) return
+    const gateResult = await gate('pdf_export', userId, userSubscription ? normalizeTierName(userSubscription.tier_name) : undefined)
+    if (!gateResult.allowed) {
+      setPaywallFeature('pdf_export')
+      setPaywallMessage(gateResult.upgradeMessage || 'PDF export requires a premium subscription.')
+      setShowPaywall(true)
+      return
+    }
+    
+    incrementReport()
     
     console.log('Downloading PDF for case:', caseFile.id)
     alert(`PDF download for Case ${caseFile.id} would be generated here`)
   }
 
   const generateQRCode = async (caseFile: CaseFile) => {
-    const hasAccess = await checkFeatureAccess('qr_export')
-    if (!hasAccess) return
+    const gateResult = await gate('qr_export', userId, userSubscription ? normalizeTierName(userSubscription.tier_name) : undefined)
+    if (!gateResult.allowed) {
+      setPaywallFeature('qr_export')
+      setPaywallMessage(gateResult.upgradeMessage || 'QR code generation requires a premium subscription.')
+      setShowPaywall(true)
+      return
+    }
+    
+    incrementReport()
     
     console.log('Generating QR code for case:', caseFile.id)
     alert(`QR Code for Case ${caseFile.id} would be generated here\nURL: cryptoshield.ai/case/${caseFile.id}`)
@@ -2561,7 +2585,12 @@ function App() {
                 View Plans & Upgrade
               </Button>
               <Button 
-                onClick={() => setShowPaywall(false)}
+                onClick={() => {
+                  if (paywallFeature) {
+                    handlePaywallDismissal(paywallFeature)
+                  }
+                  setShowPaywall(false)
+                }}
                 className="w-full bg-[#132B45] hover:bg-[#132B45]/80 text-white font-bold text-sm md:text-base h-11 md:h-12"
               >
                 Maybe Later
