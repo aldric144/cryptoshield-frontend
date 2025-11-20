@@ -267,6 +267,90 @@ body {
   p, button, input, textarea {
     font-size: 16px;
   }
+  
+  /* ========================================
+     TAB-SPECIFIC MOBILE FIXES
+     ======================================== */
+  
+  /* Fix long strings (wallet addresses, hashes) */
+  .font-mono, [class*="font-mono"] {
+    word-break: break-all;
+    overflow-wrap: anywhere;
+  }
+  
+  /* Fix QR codes and images - center and constrain */
+  img[alt*="QR"], canvas, svg {
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+  }
+  
+  /* Fix timeline items - ensure proper wrapping */
+  [class*="timeline"] {
+    min-width: 0;
+    overflow-wrap: break-word;
+  }
+  
+  /* Fix badge overflow */
+  [class*="badge"], [role="status"] {
+    word-break: break-word;
+    white-space: normal;
+  }
+  
+  /* Fix map/chart containers */
+  [class*="map"], [class*="chart"], [class*="hotmap"] {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+  
+  /* Fix alert/card overflow */
+  [role="alert"], [class*="alert"] {
+    min-width: 0;
+    overflow-wrap: break-word;
+  }
+  
+  /* Fix progress bars */
+  [role="progressbar"] {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  /* Fix modal/dialog on mobile */
+  [role="dialog"], [class*="modal"] {
+    max-width: calc(100vw - 32px);
+    margin: 16px;
+  }
+  
+  /* Fix table overflow */
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  
+  /* Fix grid layouts to single column */
+  .grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Fix flex layouts to wrap */
+  .flex {
+    flex-wrap: wrap !important;
+  }
+  
+  /* Fix contact cards in Family tab */
+  [class*="contact"] {
+    width: 100%;
+    min-width: 0;
+  }
+  
+  /* Fix store locator cards in GPS tab */
+  [class*="store"] {
+    width: 100%;
+    min-width: 0;
+  }
 }
 
 /* TABLET BREAKPOINT (481px - 768px) */
