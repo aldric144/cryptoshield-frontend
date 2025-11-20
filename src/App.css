@@ -176,3 +176,160 @@ body {
     --tw-text-opacity: 1;
   }
 }
+
+/* ========================================
+   MOBILE-ONLY CSS OVERRIDES
+   (DO NOT AFFECT DESKTOP LAYOUT)
+   ======================================== */
+
+/* PHONE BREAKPOINT (max-width: 480px) */
+@media (max-width: 480px) {
+  /* Remove horizontal scrolling */
+  html, body {
+    overflow-x: hidden;
+  }
+  
+  #root {
+    max-width: 100%;
+  }
+  
+  /* Fix containers to fit viewport */
+  .mobile-container, .container {
+    box-sizing: border-box;
+    padding-left: 16px;
+    padding-right: 16px;
+    max-width: 100%;
+  }
+  
+  .mobile-card {
+    width: 100%;
+    margin: 0 0 16px 0;
+    padding: 16px;
+  }
+  
+  /* Fix tabs navigation overflow - Force 2-column grid */
+  [role="tablist"] {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+  
+  [role="tablist"] [role="tab"] {
+    min-width: 0 !important;
+    white-space: normal !important;
+    line-height: 1.1 !important;
+    padding: 10px 8px !important;
+    font-size: 14px !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  
+  /* Prevent long content from forcing width */
+  [role="tabpanel"] * {
+    min-width: 0;
+  }
+  
+  /* Fix media elements */
+  img, svg, canvas, video {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  /* Fix buttons to full width */
+  .mobile-button, button {
+    width: 100%;
+    min-height: 44px;
+  }
+  
+  /* Fix form inputs to full width */
+  textarea, input, select {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  /* Allow flex containers to wrap */
+  .flex {
+    flex-wrap: wrap;
+  }
+  
+  /* Mobile typography */
+  h1 {
+    font-size: 22px;
+  }
+  
+  h2 {
+    font-size: 18px;
+  }
+  
+  p, button, input, textarea {
+    font-size: 16px;
+  }
+}
+
+/* TABLET BREAKPOINT (481px - 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+  /* Remove horizontal scrolling */
+  html, body {
+    overflow-x: hidden;
+  }
+  
+  #root {
+    max-width: 100%;
+  }
+  
+  /* Fix containers to fit viewport */
+  .mobile-container, .container {
+    box-sizing: border-box;
+    padding-left: 16px;
+    padding-right: 16px;
+    max-width: 100%;
+  }
+  
+  .mobile-card {
+    width: 100%;
+    margin: 0 0 20px 0;
+    padding: 18px;
+  }
+  
+  /* Fix tabs navigation overflow - Force 3-column grid */
+  [role="tablist"] {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+  
+  [role="tablist"] [role="tab"] {
+    min-width: 0 !important;
+    white-space: normal !important;
+    line-height: 1.1 !important;
+    padding: 10px 10px !important;
+    font-size: 15px !important;
+  }
+  
+  /* Prevent long content from forcing width */
+  [role="tabpanel"] * {
+    min-width: 0;
+  }
+  
+  /* Fix media elements */
+  img, svg, canvas, video {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  /* Fix buttons to full width */
+  .mobile-button, button {
+    width: 100%;
+    min-height: 44px;
+  }
+  
+  /* Fix form inputs to full width */
+  textarea, input, select {
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
