@@ -501,6 +501,7 @@ function App() {
   const analyzeVoice = async () => {
     if (!callText.trim()) return
     
+    console.info('[A-Series] 🎤 Starting voice analysis...', { API_URL, callText: callText.substring(0, 50) + '...' })
     
     setIsMonitoring(true)
     const callId = `call-${Date.now()}`
@@ -509,6 +510,7 @@ function App() {
     addTimelineEvent('Call received', 'low', '📞')
     
     try {
+      console.info('[A-Series] 📡 Calling /api/voice-analysis...')
       const response = await fetch(`${API_URL}/api/voice-analysis`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -518,13 +520,20 @@ function App() {
           audio_text: callText
         })
       })
+      
+      if (!response.ok) {
+        throw new Error(`Voice analysis failed: ${response.status} ${response.statusText}`)
+      }
+      
       const data = await response.json()
+      console.info('[A-Series] ✅ Voice analysis response:', data)
       setVoiceAnalysis(data)
       
       if (data.scam_probability > 50) {
         addTimelineEvent('First scam phrase detected', 'medium', '⚠️')
       }
       
+      console.info('[A-Series] 📡 Calling /api/emotional-analysis...')
       const emotionalResponse = await fetch(`${API_URL}/api/emotional-analysis`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -534,7 +543,13 @@ function App() {
           audio_text: callText
         })
       })
+      
+      if (!emotionalResponse.ok) {
+        throw new Error(`Emotional analysis failed: ${emotionalResponse.status} ${emotionalResponse.statusText}`)
+      }
+      
       const emotionalData = await emotionalResponse.json()
+      console.info('[A-Series] ✅ Emotional analysis response:', emotionalData)
       setEmotionalAnalysis(emotionalData)
       
       if (emotionalData.manipulation_index > 60) {
@@ -580,7 +595,8 @@ function App() {
       
       fetchStats()
     } catch (error) {
-      console.error('Error analyzing voice:', error)
+      console.error('[A-Series] ❌ Voice analysis error:', error)
+      alert(`Voice analysis failed: ${error instanceof Error ? error.message : 'Unknown error'}\n\nPlease check:\n1. Backend is running\n2. CORS is configured\n3. Network connection`)
     }
   }
 
@@ -600,6 +616,7 @@ function App() {
     addTimelineEvent('Wallet risk check initiated', 'medium', '🪙')
     
     try {
+      console.info('[A-Series] 🪙 Checking wallet risk...', { API_URL, walletAddress })
       const response = await fetch(`${API_URL}/api/wallet-risk`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -608,7 +625,13 @@ function App() {
           user_id: userId
         })
       })
+      
+      if (!response.ok) {
+        throw new Error(`Wallet risk check failed: ${response.status} ${response.statusText}`)
+      }
+      
       const data = await response.json()
+      console.info('[A-Series] ✅ Wallet risk response:', data)
       setWalletRisk(data)
       
       if (data.risk_score >= 75) {
@@ -630,7 +653,8 @@ function App() {
       
       fetchStats()
     } catch (error) {
-      console.error('Error checking wallet:', error)
+      console.error('[A-Series] ❌ Wallet risk check error:', error)
+      alert(`Wallet risk check failed: ${error instanceof Error ? error.message : 'Unknown error'}\n\nPlease check:\n1. Backend is running\n2. CORS is configured\n3. Wallet address format`)
     }
   }
 
@@ -676,7 +700,8 @@ function App() {
       
       fetchStats()
     } catch (error) {
-      console.error('Error checking GPS:', error)
+      console.error('[A-Series] ❌ GPS check error:', error)
+      alert(`GPS check failed: ${error instanceof Error ? error.message : 'Unknown error'}\n\nPlease check:\n1. Backend is running\n2. CORS is configured\n3. Coordinates are valid`)
     }
   }
 
