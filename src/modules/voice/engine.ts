@@ -73,7 +73,6 @@ export class VoiceAnalyzerEngine {
   private callback: VoiceEngineCallback | null = null;
   private apiUrl: string;
   private buffer: string = '';
-  private lastAnalysisTime = 0;
 
   constructor(apiUrl: string) {
     this.apiUrl = apiUrl;
@@ -195,7 +194,6 @@ export class VoiceAnalyzerEngine {
     this.sessionDuration = 0;
     this.sessionStartTime = null;
     this.buffer = '';
-    this.lastAnalysisTime = 0;
     this.notifyCallback();
   }
 
