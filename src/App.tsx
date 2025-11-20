@@ -9,8 +9,8 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Progress } from '@/components/ui/progress'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
-import { gate, handlePaywallDismissal, incrementWalletScan, incrementReport, type GateResult } from '@/utils/subscriptionGate'
-import { normalizeTierName, type SubscriptionTier } from '@/utils/features'
+import { gate, handlePaywallDismissal, incrementWalletScan, incrementReport } from '@/utils/subscriptionGate'
+import { normalizeTierName } from '@/utils/features'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
@@ -960,28 +960,6 @@ function App() {
       setSubscriptionTiers(data.tiers || [])
     } catch (error) {
       console.error('Error fetching tiers:', error)
-    }
-  }
-
-  const checkFeatureAccess = async (feature: string): Promise<boolean> => {
-    try {
-      const response = await fetch(`${API_URL}/api/subscription/check`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_id: userId, feature })
-      })
-      const data = await response.json()
-      
-      if (!data.has_access) {
-        setPaywallFeature(feature)
-        setPaywallMessage(data.upgrade_message || 'This feature requires a premium subscription.')
-        setShowPaywall(true)
-        return false
-      }
-      return true
-    } catch (error) {
-      console.error('Error checking feature access:', error)
-      return true
     }
   }
 
