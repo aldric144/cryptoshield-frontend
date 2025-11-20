@@ -1067,7 +1067,7 @@ function App() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-[#0A1A2F] text-white">
+    <div className="min-h-[100dvh] bg-[#0A1A2F] text-white">
       {/* Header - Mobile First */}
       <div className="border-b border-[#14B8A6]/30 bg-[#11243D]/50 backdrop-blur-sm">
         <div className="mobile-container">
@@ -1178,68 +1178,8 @@ function App() {
 
       <div className="mobile-container">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 md:space-y-6 lg:space-y-8">
-          {/* Tabs Navigation - Mobile: 2 cols, Tablet: 3 cols, Desktop: 8 cols */}
-          <TabsList className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-8 bg-[#11243D] border-2 border-[#14B8A6]/30 p-1.5 md:p-2 rounded-[14px] gap-1 md:gap-0 safe-area-top safe-area-top-margin safe-area-bottom">
-            <TabsTrigger 
-              value="voice" 
-              className="data-[state=active]:bg-[#14B8A6] data-[state=active]:text-[#0A1A2F] text-[#E2E8F0] font-bold text-sm md:text-base lg:text-lg h-12 md:h-14 rounded-[12px] flex items-center justify-center gap-1 md:gap-2"
-            >
-              <span>🛡️</span>
-              <span className="hidden sm:inline">Voice Shield</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="monitor" 
-              className="data-[state=active]:bg-[#14B8A6] data-[state=active]:text-[#0A1A2F] text-[#E2E8F0] font-bold text-sm md:text-base lg:text-lg h-12 md:h-14 rounded-[12px] flex items-center justify-center gap-1 md:gap-2"
-            >
-              <span>🎧</span>
-              <span className="hidden sm:inline">Monitor</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="scan" 
-              className="data-[state=active]:bg-[#F5C461] data-[state=active]:text-[#0A0F1A] text-[#E2E8F0] font-bold text-sm md:text-base lg:text-lg h-12 md:h-14 rounded-[12px] flex items-center justify-center gap-1 md:gap-2"
-            >
-              <span>🔍</span>
-              <span className="hidden sm:inline">Scan</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="wallet" 
-              className="data-[state=active]:bg-[#14B8A6] data-[state=active]:text-[#0A1A2F] text-[#E2E8F0] font-bold text-sm md:text-base lg:text-lg h-12 md:h-14 rounded-[12px] flex items-center justify-center gap-1 md:gap-2"
-            >
-              <span>🪙</span>
-              <span className="hidden sm:inline">Wallet</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="gps" 
-              className="data-[state=active]:bg-[#14B8A6] data-[state=active]:text-[#0A1A2F] text-[#E2E8F0] font-bold text-sm md:text-base lg:text-lg h-12 md:h-14 rounded-[12px] flex items-center justify-center gap-1 md:gap-2"
-            >
-              <span>📍</span>
-              <span className="hidden sm:inline">GPS</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="family" 
-              className="data-[state=active]:bg-[#14B8A6] data-[state=active]:text-[#0A1A2F] text-[#E2E8F0] font-bold text-sm md:text-base lg:text-lg h-12 md:h-14 rounded-[12px] flex items-center justify-center gap-1 md:gap-2"
-            >
-              <span>👨‍👩‍👧‍👦</span>
-              <span className="hidden sm:inline">Family</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="reports" 
-              className="data-[state=active]:bg-[#14B8A6] data-[state=active]:text-[#0A1A2F] text-[#E2E8F0] font-bold text-sm md:text-base lg:text-lg h-12 md:h-14 rounded-[12px] flex items-center justify-center gap-1 md:gap-2"
-            >
-              <span>📄</span>
-              <span className="hidden sm:inline">Reports</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="emergency" 
-              className="data-[state=active]:bg-[#EF4444] data-[state=active]:text-white text-[#E2E8F0] font-bold text-sm md:text-base lg:text-lg h-12 md:h-14 rounded-[12px] flex items-center justify-center gap-1 md:gap-2"
-            >
-              <span>🚨</span>
-              <span className="hidden sm:inline">Emergency</span>
-            </TabsTrigger>
-          </TabsList>
-
           {/* VOICE SHIELD™ TAB - Real-Time Voice Analyzer */}
-          <TabsContent value="voice" className="space-y-4 md:space-y-6 lg:space-y-8">
+          <TabsContent value="voice" className="min-h-[100dvh] pt-[20px] pb-[110px] space-y-4 md:space-y-6 lg:space-y-8">
             {/* Danger Alerts - Show at top when active */}
             <DangerAlerts alerts={voiceEngineState.alerts} />
             
@@ -1359,12 +1299,12 @@ function App() {
           </TabsContent>
 
           {/* SCAN TAB - FBI-Grade Intelligence Scanner */}
-          <TabsContent value="scan" className="space-y-0">
+          <TabsContent value="scan" className="min-h-[100dvh] pt-[20px] pb-[110px] space-y-0">
             <ScanPage />
           </TabsContent>
 
           {/* MONITOR TAB - Mobile First (Manual Analysis Only) */}
-          <TabsContent value="monitor" className="space-y-4 md:space-y-6 lg:space-y-8">
+          <TabsContent value="monitor" className="min-h-[100dvh] pt-[20px] pb-[110px] space-y-4 md:space-y-6 lg:space-y-8">
             <Card className="mobile-card bg-[#132B45] border-[#14B8A6]/30 border-2 rounded-[14px] hover:shadow-[0_0_12px_#14B8A6] transition-shadow">
               <CardHeader className="pb-4 md:pb-6">
                 <CardTitle className="text-white text-xl md:text-2xl lg:text-3xl font-bold flex items-center gap-2 md:gap-3">
@@ -1778,7 +1718,7 @@ function App() {
           </TabsContent>
 
           {/* WALLET TAB - Mobile First */}
-          <TabsContent value="wallet" className="space-y-4 md:space-y-6 lg:space-y-8">
+          <TabsContent value="wallet" className="min-h-[100dvh] pt-[20px] pb-[110px] space-y-4 md:space-y-6 lg:space-y-8">
             {/* Known Scam Wallet Index */}
             <Card className="mobile-card bg-[#132B45] border-[#14B8A6]/30 border-2 rounded-[14px] hover:shadow-[0_0_12px_#14B8A6] transition-shadow">
               <CardHeader className="pb-4 md:pb-6">
@@ -2000,7 +1940,7 @@ function App() {
           </TabsContent>
 
           {/* GPS TAB - Mobile First */}
-          <TabsContent value="gps" className="space-y-4 md:space-y-6 lg:space-y-8">
+          <TabsContent value="gps" className="min-h-[100dvh] pt-[20px] pb-[110px] space-y-4 md:space-y-6 lg:space-y-8">
             {/* Address to Coordinates (Forward Geocoding) */}
             <Card className="mobile-card bg-[#132B45] border-[#14B8A6]/30 border-2 rounded-[14px] hover:shadow-[0_0_12px_#14B8A6] transition-shadow">
               <CardHeader className="pb-4 md:pb-6">
@@ -2211,7 +2151,7 @@ function App() {
           </TabsContent>
 
           {/* FAMILY TAB - Mobile First */}
-          <TabsContent value="family" className="space-y-4 md:space-y-6 lg:space-y-8">
+          <TabsContent value="family" className="min-h-[100dvh] pt-[20px] pb-[110px] space-y-4 md:space-y-6 lg:space-y-8">
             <Card className="mobile-card bg-[#132B45] border-[#14B8A6]/30 border-2 rounded-[14px] hover:shadow-[0_0_12px_#14B8A6] transition-shadow">
               <CardHeader className="pb-4 md:pb-6">
                 <CardTitle className="text-white text-xl md:text-2xl lg:text-3xl font-bold flex items-center gap-2 md:gap-3">
@@ -2371,7 +2311,7 @@ function App() {
           </TabsContent>
 
           {/* REPORTS TAB - Mobile First */}
-          <TabsContent value="reports" className="space-y-4 md:space-y-6 lg:space-y-8">
+          <TabsContent value="reports" className="min-h-[100dvh] pt-[20px] pb-[110px] space-y-4 md:space-y-6 lg:space-y-8">
             <Card className="mobile-card bg-[#132B45] border-[#14B8A6]/30 border-2 rounded-[14px] hover:shadow-[0_0_12px_#14B8A6] transition-shadow">
               <CardHeader className="pb-4 md:pb-6">
                 <CardTitle className="text-white text-xl md:text-2xl lg:text-3xl font-bold flex items-center gap-2 md:gap-3">
@@ -2463,7 +2403,7 @@ function App() {
           </TabsContent>
 
           {/* EMERGENCY TAB - Mobile First */}
-          <TabsContent value="emergency" className="space-y-4 md:space-y-6 lg:space-y-8">
+          <TabsContent value="emergency" className="min-h-[100dvh] pt-[20px] pb-[110px] space-y-4 md:space-y-6 lg:space-y-8">
             <Card className="mobile-card bg-[#7F1D1D] border-[#EF4444] border-4 rounded-[14px] shadow-[0_0_20px_#EF4444]">
               <CardHeader className="pb-4 md:pb-6">
                 <CardTitle className="text-white text-xl md:text-2xl lg:text-3xl font-bold flex items-center gap-2 md:gap-3">
@@ -2599,6 +2539,66 @@ function App() {
               </CardContent>
             </Card>
           </TabsContent>
+
+          {/* Tabs Navigation - Fixed Bottom Bar */}
+          <TabsList className="fixed bottom-0 left-0 w-full z-[9999] flex flex-row justify-around items-center bg-[#00243b]/90 backdrop-blur-md py-4 safe-area-bottom">
+            <TabsTrigger 
+              value="voice" 
+              className="data-[state=active]:bg-[#14B8A6] data-[state=active]:text-[#0A1A2F] text-[#E2E8F0] font-bold text-xs md:text-sm flex flex-col items-center justify-center gap-1 px-2"
+            >
+              <span className="text-lg">🛡️</span>
+              <span className="hidden sm:inline text-xs">Voice</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="monitor" 
+              className="data-[state=active]:bg-[#14B8A6] data-[state=active]:text-[#0A1A2F] text-[#E2E8F0] font-bold text-xs md:text-sm flex flex-col items-center justify-center gap-1 px-2"
+            >
+              <span className="text-lg">🎧</span>
+              <span className="hidden sm:inline text-xs">Monitor</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="scan" 
+              className="data-[state=active]:bg-[#F5C461] data-[state=active]:text-[#0A0F1A] text-[#E2E8F0] font-bold text-xs md:text-sm flex flex-col items-center justify-center gap-1 px-2"
+            >
+              <span className="text-lg">🔍</span>
+              <span className="hidden sm:inline text-xs">Scan</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="wallet" 
+              className="data-[state=active]:bg-[#14B8A6] data-[state=active]:text-[#0A1A2F] text-[#E2E8F0] font-bold text-xs md:text-sm flex flex-col items-center justify-center gap-1 px-2"
+            >
+              <span className="text-lg">🪙</span>
+              <span className="hidden sm:inline text-xs">Wallet</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="gps" 
+              className="data-[state=active]:bg-[#14B8A6] data-[state=active]:text-[#0A1A2F] text-[#E2E8F0] font-bold text-xs md:text-sm flex flex-col items-center justify-center gap-1 px-2"
+            >
+              <span className="text-lg">📍</span>
+              <span className="hidden sm:inline text-xs">GPS</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="family" 
+              className="data-[state=active]:bg-[#14B8A6] data-[state=active]:text-[#0A1A2F] text-[#E2E8F0] font-bold text-xs md:text-sm flex flex-col items-center justify-center gap-1 px-2"
+            >
+              <span className="text-lg">👨‍👩‍👧‍👦</span>
+              <span className="hidden sm:inline text-xs">Family</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="reports" 
+              className="data-[state=active]:bg-[#14B8A6] data-[state=active]:text-[#0A1A2F] text-[#E2E8F0] font-bold text-xs md:text-sm flex flex-col items-center justify-center gap-1 px-2"
+            >
+              <span className="text-lg">📄</span>
+              <span className="hidden sm:inline text-xs">Reports</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="emergency" 
+              className="data-[state=active]:bg-[#EF4444] data-[state=active]:text-white text-[#E2E8F0] font-bold text-xs md:text-sm flex flex-col items-center justify-center gap-1 px-2"
+            >
+              <span className="text-lg">🚨</span>
+              <span className="hidden sm:inline text-xs">Emergency</span>
+            </TabsTrigger>
+          </TabsList>
         </Tabs>
       </div>
 
