@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './App.css'
 import { Shield, MapPin, FileText, AlertTriangle, Activity, TrendingUp, Plus, Trash2, Download, QrCode, Bell, Mic, Search, Navigation, Map as MapIcon } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -12,6 +12,14 @@ import { Badge } from '@/components/ui/badge'
 import { gate, handlePaywallDismissal, incrementWalletScan, incrementReport } from '@/utils/subscriptionGate'
 import { normalizeTierName } from '@/utils/features'
 import { ScanPage } from '@/components/scan/ScanPage'
+import { VoiceAnalyzerEngine, VoiceEngineState } from '@/modules/voice/engine'
+import { LiveTranscriptPanel } from '@/components/voice/LiveTranscriptPanel'
+import { DangerAlerts } from '@/components/voice/DangerAlerts'
+import { DeceptionMeter } from '@/components/voice/DeceptionMeter'
+import { EmotionMeter } from '@/components/voice/EmotionMeter'
+import { ManipulationTimeline } from '@/components/voice/ManipulationTimeline'
+import { ScammerProfileCard } from '@/components/voice/ScammerProfileCard'
+import { DangerScoreGauge } from '@/components/voice/DangerScoreGauge'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
@@ -249,6 +257,19 @@ function App() {
   const [paywallFeature, setPaywallFeature] = useState('')
   const [paywallMessage, setPaywallMessage] = useState('')
   const [isFinalizing, setIsFinalizing] = useState(false)
+  
+  const voiceEngineRef = useRef<VoiceAnalyzerEngine | null>(null)
+  const [voiceEngineState, setVoiceEngineState] = useState<VoiceEngineState>({
+    isListening: false,
+    transcript: [],
+    timeline: [],
+    profile: null,
+    emotions: null,
+    deceptionProbability: 0,
+    dangerScore: 0,
+    alerts: [],
+    sessionDuration: 0,
+  })
 
   const mockScamWallets: ScamWallet[] = [
     {
@@ -984,10 +1005,65 @@ function App() {
       alert('Failed to upgrade subscription. Please try again.')
     }
   }
+  
+  const startVoiceListening = () => {
+    if (!voiceEngineRef.current) return
+    
+    const tier = userSubscription?.subscription_tier || 'free'
+    const normalizedTier = normalizeTierName(tier)
+    
+    const sessionLimits = {
+      free: 20,
+      premium: 300,
+      ultra: Infinity,
+      enterprise: Infinity,
+    }
+    
+    const maxDuration = sessionLimits[normalizedTier as keyof typeof sessionLimits] || 20
+    
+    try {
+      voiceEngineRef.current.start()
+      
+      if (maxDuration !== Infinity) {
+        setTimeout(() => {
+          if (voiceEngineRef.current && voiceEngineState.isListening) {
+            voiceEngineRef.current.stop()
+            alert(`Session limit reached (${maxDuration} seconds). Upgrade to continue.`)
+          }
+        }, maxDuration * 1000)
+      }
+    } catch (error) {
+      console.error('Failed to start voice listening:', error)
+      alert('Web Speech API not supported in this browser. Please use Chrome or Edge.')
+    }
+  }
+  
+  const stopVoiceListening = () => {
+    if (!voiceEngineRef.current) return
+    voiceEngineRef.current.stop()
+  }
+  
+  const resetVoiceSession = () => {
+    if (!voiceEngineRef.current) return
+    voiceEngineRef.current.reset()
+  }
 
   useEffect(() => {
     fetchUserSubscription()
     fetchSubscriptionTiers()
+    
+    if (!voiceEngineRef.current) {
+      voiceEngineRef.current = new VoiceAnalyzerEngine(API_URL)
+      voiceEngineRef.current.setCallback((state) => {
+        setVoiceEngineState(state)
+      })
+    }
+    
+    return () => {
+      if (voiceEngineRef.current) {
+        voiceEngineRef.current.stop()
+      }
+    }
   }, [])
 
   return (
