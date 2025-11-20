@@ -6,7 +6,7 @@ import { VerdictCard } from './VerdictCard'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { AlertCircle } from 'lucide-react'
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://cryptoshield-backend-i830.onrender.com'
+const API_URL = import.meta.env.VITE_API_URL || 'https://cryptoshield-backend-i83o.onrender.com'
 
 interface AnalysisResult {
   threat_level: string
