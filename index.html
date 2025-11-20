@@ -16,18 +16,25 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     <script>
-      // Service Worker disabled for staging to prevent cache issues during testing
-      // if ('serviceWorker' in navigator) {
-      //   window.addEventListener('load', () => {
-      //     navigator.serviceWorker.register('/service-worker.js')
-      //       .then(registration => {
-      //         console.log('Service Worker registered:', registration);
-      //       })
-      //       .catch(error => {
-      //         console.log('Service Worker registration failed:', error);
-      //       });
-      //   });
-      // }
+      // Environment-gated Service Worker registration
+      // Controlled by VITE_ENABLE_SW environment variable
+      // Staging: disabled (prevents cache issues during QA)
+      // Production: enabled (PWA support with offline capabilities)
+      const enableSW = import.meta.env.VITE_ENABLE_SW === 'true';
+      
+      if (enableSW && 'serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js?v=1.0.0')
+            .then(registration => {
+              console.log('Service Worker registered:', registration);
+            })
+            .catch(error => {
+              console.log('Service Worker registration failed:', error);
+            });
+        });
+      } else {
+        console.log('Service Worker disabled by environment configuration');
+      }
     </script>
   </body>
 </html>
