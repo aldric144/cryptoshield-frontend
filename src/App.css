@@ -1,11 +1,141 @@
+/* Mobile-First Responsive Design */
 #root {
   max-width: none;
   width: 100%;
   margin: 0;
   padding: 0;
   text-align: left;
+  min-height: 100vh;
 }
 
+/* Mobile-First Typography (16px minimum) */
+body {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* Responsive Typography Scale */
+.text-mobile-body {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.text-mobile-heading {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.text-mobile-title {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* Tablet Typography (641px+) */
+@media (min-width: 641px) {
+  .text-mobile-body {
+    font-size: 17px;
+  }
+  .text-mobile-heading {
+    font-size: 22px;
+  }
+  .text-mobile-title {
+    font-size: 28px;
+  }
+}
+
+/* Desktop Typography (1025px+) */
+@media (min-width: 1025px) {
+  .text-mobile-body {
+    font-size: 18px;
+  }
+  .text-mobile-heading {
+    font-size: 24px;
+  }
+  .text-mobile-title {
+    font-size: 32px;
+  }
+}
+
+/* Mobile-First Containers */
+.mobile-container {
+  padding: 12px;
+  width: 100%;
+}
+
+@media (min-width: 641px) {
+  .mobile-container {
+    padding: 20px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .mobile-container {
+    padding: 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+}
+
+/* Mobile-First Buttons (44px minimum touch target) */
+.mobile-button {
+  min-height: 44px;
+  width: 100%;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 12px 16px;
+}
+
+@media (min-width: 641px) {
+  .mobile-button {
+    width: auto;
+    min-width: 120px;
+  }
+}
+
+/* Mobile-First Cards */
+.mobile-card {
+  margin-bottom: 16px;
+  padding: 16px;
+}
+
+@media (min-width: 641px) {
+  .mobile-card {
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .mobile-card {
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+}
+
+/* Responsive Grid */
+.mobile-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 641px) {
+  .mobile-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .mobile-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+}
+
+/* Animations */
 @keyframes pulse-glow {
   0%, 100% {
     box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
@@ -30,4 +160,260 @@
 
 .scan-line {
   animation: scan-line 3s linear infinite;
+}
+
+/* Reduce animations on mobile for performance */
+@media (prefers-reduced-motion: reduce) {
+  .pulse-glow,
+  .scan-line {
+    animation: none;
+  }
+}
+
+/* High Contrast Mode for Seniors */
+@media (prefers-contrast: high) {
+  body {
+    --tw-text-opacity: 1;
+  }
+}
+
+/* ========================================
+   MOBILE-ONLY CSS OVERRIDES
+   (DO NOT AFFECT DESKTOP LAYOUT)
+   ======================================== */
+
+/* PHONE BREAKPOINT (max-width: 480px) */
+@media (max-width: 480px) {
+  /* Remove horizontal scrolling */
+  html, body {
+    overflow-x: hidden;
+  }
+  
+  #root {
+    max-width: 100%;
+  }
+  
+  /* Fix containers to fit viewport */
+  .mobile-container, .container {
+    box-sizing: border-box;
+    padding-left: 16px;
+    padding-right: 16px;
+    max-width: 100%;
+  }
+  
+  .mobile-card {
+    width: 100%;
+    margin: 0 0 16px 0;
+    padding: 16px;
+  }
+  
+  /* Fix tabs navigation overflow - Force 2-column grid */
+  [role="tablist"] {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+  
+  [role="tablist"] [role="tab"] {
+    min-width: 0 !important;
+    white-space: normal !important;
+    line-height: 1.1 !important;
+    padding: 10px 8px !important;
+    font-size: 14px !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  
+  /* Prevent long content from forcing width */
+  [role="tabpanel"] * {
+    min-width: 0;
+  }
+  
+  /* Fix media elements */
+  img, svg, canvas, video {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  /* Fix buttons to full width */
+  .mobile-button, button {
+    width: 100%;
+    min-height: 44px;
+  }
+  
+  /* Fix form inputs to full width */
+  textarea, input, select {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  /* Allow flex containers to wrap */
+  .flex {
+    flex-wrap: wrap;
+  }
+  
+  /* Mobile typography */
+  h1 {
+    font-size: 22px;
+  }
+  
+  h2 {
+    font-size: 18px;
+  }
+  
+  p, button, input, textarea {
+    font-size: 16px;
+  }
+  
+  /* ========================================
+     TAB-SPECIFIC MOBILE FIXES
+     ======================================== */
+  
+  /* Fix long strings (wallet addresses, hashes) */
+  .font-mono, [class*="font-mono"] {
+    word-break: break-all;
+    overflow-wrap: anywhere;
+  }
+  
+  /* Fix QR codes and images - center and constrain */
+  img[alt*="QR"], canvas, svg {
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+  }
+  
+  /* Fix timeline items - ensure proper wrapping */
+  [class*="timeline"] {
+    min-width: 0;
+    overflow-wrap: break-word;
+  }
+  
+  /* Fix badge overflow */
+  [class*="badge"], [role="status"] {
+    word-break: break-word;
+    white-space: normal;
+  }
+  
+  /* Fix map/chart containers */
+  [class*="map"], [class*="chart"], [class*="hotmap"] {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+  
+  /* Fix alert/card overflow */
+  [role="alert"], [class*="alert"] {
+    min-width: 0;
+    overflow-wrap: break-word;
+  }
+  
+  /* Fix progress bars */
+  [role="progressbar"] {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  /* Fix modal/dialog on mobile */
+  [role="dialog"], [class*="modal"] {
+    max-width: calc(100vw - 32px);
+    margin: 16px;
+  }
+  
+  /* Fix table overflow */
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  
+  /* Fix grid layouts to single column */
+  .grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Fix flex layouts to wrap */
+  .flex {
+    flex-wrap: wrap !important;
+  }
+  
+  /* Fix contact cards in Family tab */
+  [class*="contact"] {
+    width: 100%;
+    min-width: 0;
+  }
+  
+  /* Fix store locator cards in GPS tab */
+  [class*="store"] {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+/* TABLET BREAKPOINT (481px - 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+  /* Remove horizontal scrolling */
+  html, body {
+    overflow-x: hidden;
+  }
+  
+  #root {
+    max-width: 100%;
+  }
+  
+  /* Fix containers to fit viewport */
+  .mobile-container, .container {
+    box-sizing: border-box;
+    padding-left: 16px;
+    padding-right: 16px;
+    max-width: 100%;
+  }
+  
+  .mobile-card {
+    width: 100%;
+    margin: 0 0 20px 0;
+    padding: 18px;
+  }
+  
+  /* Fix tabs navigation overflow - Force 3-column grid */
+  [role="tablist"] {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+  
+  [role="tablist"] [role="tab"] {
+    min-width: 0 !important;
+    white-space: normal !important;
+    line-height: 1.1 !important;
+    padding: 10px 10px !important;
+    font-size: 15px !important;
+  }
+  
+  /* Prevent long content from forcing width */
+  [role="tabpanel"] * {
+    min-width: 0;
+  }
+  
+  /* Fix media elements */
+  img, svg, canvas, video {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  /* Fix buttons to full width */
+  .mobile-button, button {
+    width: 100%;
+    min-height: 44px;
+  }
+  
+  /* Fix form inputs to full width */
+  textarea, input, select {
+    width: 100%;
+    box-sizing: border-box;
+  }
 }

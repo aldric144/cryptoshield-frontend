@@ -16,17 +16,18 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/service-worker.js')
-            .then(registration => {
-              console.log('Service Worker registered:', registration);
-            })
-            .catch(error => {
-              console.log('Service Worker registration failed:', error);
-            });
-        });
-      }
+      // Service Worker disabled for staging to prevent cache issues during testing
+      // if ('serviceWorker' in navigator) {
+      //   window.addEventListener('load', () => {
+      //     navigator.serviceWorker.register('/service-worker.js')
+      //       .then(registration => {
+      //         console.log('Service Worker registered:', registration);
+      //       })
+      //       .catch(error => {
+      //         console.log('Service Worker registration failed:', error);
+      //       });
+      //   });
+      // }
     </script>
   </body>
 </html>
