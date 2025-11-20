@@ -1772,8 +1772,6 @@ function App() {
                     )}
                   </div>
                 )}
-              </CardContent>
-            </Card>
           </TabsContent>
 
           {/* WALLET TAB - Mobile First */}
