@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { gate, handlePaywallDismissal, incrementWalletScan, incrementReport } from '@/utils/subscriptionGate'
 import { normalizeTierName } from '@/utils/features'
+import { ScanPage } from '@/components/scan/ScanPage'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
@@ -1101,14 +1102,21 @@ function App() {
 
       <div className="mobile-container">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 md:space-y-6 lg:space-y-8">
-          {/* Tabs Navigation - Mobile: 2 cols, Tablet: 3 cols, Desktop: 6 cols */}
-          <TabsList className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 bg-[#11243D] border-2 border-[#14B8A6]/30 p-1.5 md:p-2 rounded-[14px] gap-1 md:gap-0">
+          {/* Tabs Navigation - Mobile: 2 cols, Tablet: 3 cols, Desktop: 7 cols */}
+          <TabsList className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 bg-[#11243D] border-2 border-[#14B8A6]/30 p-1.5 md:p-2 rounded-[14px] gap-1 md:gap-0">
             <TabsTrigger 
               value="monitor" 
               className="data-[state=active]:bg-[#14B8A6] data-[state=active]:text-[#0A1A2F] text-[#E2E8F0] font-bold text-sm md:text-base lg:text-lg h-12 md:h-14 rounded-[12px] flex items-center justify-center gap-1 md:gap-2"
             >
               <span>🎧</span>
               <span className="hidden sm:inline">Monitor</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="scan" 
+              className="data-[state=active]:bg-[#F5C461] data-[state=active]:text-[#0A0F1A] text-[#E2E8F0] font-bold text-sm md:text-base lg:text-lg h-12 md:h-14 rounded-[12px] flex items-center justify-center gap-1 md:gap-2"
+            >
+              <span>🔍</span>
+              <span className="hidden sm:inline">Scan</span>
             </TabsTrigger>
             <TabsTrigger 
               value="wallet" 
@@ -1146,6 +1154,11 @@ function App() {
               <span className="hidden sm:inline">Emergency</span>
             </TabsTrigger>
           </TabsList>
+
+          {/* SCAN TAB - FBI-Grade Intelligence Scanner */}
+          <TabsContent value="scan" className="space-y-0">
+            <ScanPage />
+          </TabsContent>
 
           {/* MONITOR TAB - Mobile First */}
           <TabsContent value="monitor" className="space-y-4 md:space-y-6 lg:space-y-8">
