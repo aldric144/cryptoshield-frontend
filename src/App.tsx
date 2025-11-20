@@ -1462,7 +1462,10 @@ function App() {
                     {emotionalAnalysis && (
                       <Card className="mobile-card bg-[#11243D] border-[#14B8A6]/30 border-2 rounded-[14px]">
                         <CardHeader className="pb-3 md:pb-4">
-                          <CardTitle className="text-[#CFFAFE] text-lg md:text-xl lg:text-2xl font-bold">Emotional Analysis</CardTitle>
+                          <CardTitle className="text-[#CFFAFE] text-lg md:text-xl lg:text-2xl font-bold flex items-center gap-2 md:gap-3">
+                            <span>💭</span>
+                            Emotional Analysis
+                          </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4 md:space-y-5">
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
@@ -1959,7 +1962,10 @@ function App() {
                     {walletRisk.known_scam_flags.length > 0 && (
                       <Card className="mobile-card bg-[#EF4444]/10 border-[#EF4444]/50 border-2 rounded-[14px]">
                         <CardHeader className="pb-3 md:pb-4">
-                          <CardTitle className="text-[#EF4444] text-lg md:text-xl lg:text-2xl font-bold">Known Scam Flags</CardTitle>
+                          <CardTitle className="text-[#EF4444] text-lg md:text-xl lg:text-2xl font-bold flex items-center gap-2 md:gap-3">
+                            <span>🚩</span>
+                            Known Scam Flags
+                          </CardTitle>
                         </CardHeader>
                         <CardContent>
                           <div className="space-y-2 md:space-y-3">
@@ -1976,7 +1982,10 @@ function App() {
 
                     <Card className="mobile-card bg-[#11243D] border-[#14B8A6]/30 border-2 rounded-[14px]">
                       <CardHeader className="pb-3 md:pb-4">
-                        <CardTitle className="text-[#CFFAFE] text-lg md:text-xl lg:text-2xl font-bold">Wallet Lineage Map</CardTitle>
+                        <CardTitle className="text-[#CFFAFE] text-lg md:text-xl lg:text-2xl font-bold flex items-center gap-2 md:gap-3">
+                          <span>🔗</span>
+                          Wallet Lineage Map
+                        </CardTitle>
                       </CardHeader>
                       <CardContent>
                         <div className="text-[#E2E8F0] text-xs md:text-sm lg:text-base overflow-x-auto">
@@ -2226,7 +2235,10 @@ function App() {
                 {showAddContact && (
                   <Card className="bg-[#11243D] border-[#14B8A6]/30 border-2 rounded-[12px] p-4 md:p-6">
                     <CardHeader className="pb-3 md:pb-4">
-                      <CardTitle className="text-[#CFFAFE] text-lg md:text-xl font-bold">New Contact</CardTitle>
+                      <CardTitle className="text-[#CFFAFE] text-lg md:text-xl font-bold flex items-center gap-2 md:gap-3">
+                        <span>➕</span>
+                        New Contact
+                      </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-3 md:space-y-4">
                       <div>
@@ -2476,7 +2488,10 @@ function App() {
                 {/* System Status */}
                 <Card className="bg-[#11243D] border-[#14B8A6]/30 border-2 rounded-[12px] p-4 md:p-6">
                   <CardHeader className="pb-3 md:pb-4">
-                    <CardTitle className="text-[#CFFAFE] text-base md:text-lg lg:text-xl font-bold">System Status</CardTitle>
+                    <CardTitle className="text-[#CFFAFE] text-base md:text-lg lg:text-xl font-bold flex items-center gap-2 md:gap-3">
+                      <span>⚙️</span>
+                      System Status
+                    </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3 md:space-y-4">
                     <div className="grid grid-cols-2 gap-2 md:gap-3 lg:gap-4">
@@ -2529,7 +2544,10 @@ function App() {
                 {/* Automatic Activation Settings */}
                 <Card className="bg-[#11243D] border-[#14B8A6]/30 border-2 rounded-[12px] p-4 md:p-6">
                   <CardHeader className="pb-3 md:pb-4">
-                    <CardTitle className="text-[#CFFAFE] text-base md:text-lg lg:text-xl font-bold">Automatic Activation (Default ON)</CardTitle>
+                    <CardTitle className="text-[#CFFAFE] text-base md:text-lg lg:text-xl font-bold flex items-center gap-2 md:gap-3">
+                      <span>🤖</span>
+                      Automatic Activation (Default ON)
+                    </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-2 md:space-y-3">
                     <div className="text-sm md:text-base text-[#E2E8F0]">
