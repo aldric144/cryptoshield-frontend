@@ -1363,18 +1363,8 @@ function App() {
             <ScanPage />
           </TabsContent>
 
-<<<<<<< HEAD
-          {/* MONITOR TAB - Voice Analyzer with Web Speech API */}
-||||||| parent of 494c6ad (Add Voice Shield™ tab with all 8 voice analyzer components)
-          {/* MONITOR TAB - Mobile First */}
-=======
           {/* MONITOR TAB - Mobile First (Manual Analysis Only) */}
->>>>>>> 494c6ad (Add Voice Shield™ tab with all 8 voice analyzer components)
           <TabsContent value="monitor" className="space-y-4 md:space-y-6 lg:space-y-8">
-            {/* Danger Alerts - Show at top when active */}
-            <DangerAlerts alerts={voiceEngineState.alerts} />
-            
-            {/* Voice Controls Card */}
             <Card className="mobile-card bg-[#132B45] border-[#14B8A6]/30 border-2 rounded-[14px] hover:shadow-[0_0_12px_#14B8A6] transition-shadow">
               <CardHeader className="pb-4 md:pb-6">
                 <CardTitle className="text-white text-xl md:text-2xl lg:text-3xl font-bold flex items-center gap-2 md:gap-3">
@@ -1382,55 +1372,13 @@ function App() {
                   Real-Time Voice Protection
                 </CardTitle>
                 <CardDescription className="text-[#CFFAFE] text-sm md:text-base lg:text-lg mt-2">
-                  AI-powered live voice analysis with Web Speech API
+                  AI-powered scam detection and emotional manipulation analysis
                   {nightModeActive && <span className="block sm:inline sm:ml-2 text-[#FBBF24] mt-1 sm:mt-0">🌙 Enhanced Night Protection Active</span>}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4 md:space-y-6">
-                {/* Session Info */}
-                {voiceEngineState.isListening && (
-                  <Alert className="bg-[#14B8A6]/20 border-[#14B8A6] border-2">
-                    <Mic className="h-5 w-5 text-[#14B8A6] animate-pulse" />
-                    <AlertTitle className="text-white font-bold">
-                      Recording Active - {Math.floor(voiceEngineState.sessionDuration / 60)}:{(voiceEngineState.sessionDuration % 60).toString().padStart(2, '0')}
-                    </AlertTitle>
-                    <AlertDescription className="text-[#CFFAFE]">
-                      Analyzing voice patterns in real-time every 5 seconds
-                    </AlertDescription>
-                  </Alert>
-                )}
-                
-                {/* Voice Control Buttons */}
-                <div className="flex flex-wrap gap-3">
-                  {!voiceEngineState.isListening ? (
-                    <Button 
-                      onClick={startVoiceListening}
-                      className="mobile-button bg-[#14B8A6] hover:bg-[#14B8A6]/90 text-[#0A1A2F] font-bold text-base md:text-lg rounded-[12px] shadow-[0_0_12px_#14B8A6]"
-                    >
-                      <Mic className="w-4 h-4 md:w-5 md:h-5 mr-2" />
-                      Start Listening
-                    </Button>
-                  ) : (
-                    <Button 
-                      onClick={stopVoiceListening}
-                      className="mobile-button bg-[#EF4444] hover:bg-[#EF4444]/90 text-white font-bold text-base md:text-lg rounded-[12px]"
-                    >
-                      <Activity className="w-4 h-4 md:w-5 md:h-5 mr-2" />
-                      Stop Listening
-                    </Button>
-                  )}
-                  <Button 
-                    onClick={resetVoiceSession}
-                    variant="outline"
-                    className="mobile-button border-[#14B8A6] text-[#14B8A6] hover:bg-[#14B8A6]/10 font-bold text-base md:text-lg rounded-[12px]"
-                  >
-                    Reset Session
-                  </Button>
-                </div>
-                
-                {/* Manual Text Analysis (Fallback) */}
-                <div className="border-t border-[#14B8A6]/30 pt-4">
-                  <label className="text-white text-base md:text-lg font-medium mb-2 md:mb-3 block">Manual Text Analysis (Fallback)</label>
+                <div>
+                  <label className="text-white text-base md:text-lg font-medium mb-2 md:mb-3 block">Call Transcript / Audio Text</label>
                   <div className="relative">
                     <Mic className="absolute left-3 md:left-4 top-3 md:top-4 w-4 h-4 md:w-5 md:h-5 text-[#A1A1AA]" />
                     <Textarea
