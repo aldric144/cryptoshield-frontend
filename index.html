@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <link rel="manifest" href="/manifest.json" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#0A1A2F" />
     <meta name="description" content="CryptoShield Guardian AI - Bitcoin & Crypto Scam Detection Platform" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -16,9 +16,15 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     <script>
-      if ('serviceWorker' in navigator) {
+      // Environment-gated Service Worker registration
+      // Controlled by VITE_ENABLE_SW environment variable
+      // Staging: disabled (prevents cache issues during QA)
+      // Production: enabled (PWA support with offline capabilities)
+      const enableSW = import.meta.env.VITE_ENABLE_SW === 'true';
+      
+      if (enableSW && 'serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/service-worker.js')
+          navigator.serviceWorker.register('/service-worker.js?v=1.0.0')
             .then(registration => {
               console.log('Service Worker registered:', registration);
             })
@@ -26,6 +32,8 @@
               console.log('Service Worker registration failed:', error);
             });
         });
+      } else {
+        console.log('Service Worker disabled by environment configuration');
       }
     </script>
   </body>
