@@ -275,7 +275,6 @@ export class VoiceAnalyzerEngine {
 
       this.updateProfile();
 
-      this.lastAnalysisTime = Date.now();
       this.notifyCallback();
     } catch (error) {
       console.error('Analysis error:', error);
