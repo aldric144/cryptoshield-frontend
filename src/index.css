@@ -17,7 +17,8 @@ html, body {
 
 /* Fix #root to fill viewport properly */
 #root {
-  height: 100dvh;
+  position: relative;
+  min-height: 100dvh;
   /* Fallback for older browsers */
   min-height: -webkit-fill-available;
 }
