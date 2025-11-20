@@ -67,7 +67,7 @@ export function ScanPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0A0F1A] p-6">
+    <div className="min-h-[100dvh] bg-[#0A0F1A] p-6">
       {/* FBI-style header */}
       <div className="max-w-7xl mx-auto mb-8">
         <div className="text-center space-y-2">
