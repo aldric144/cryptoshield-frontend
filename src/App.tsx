@@ -1103,7 +1103,7 @@ function App() {
       <div className="mobile-container">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 md:space-y-6 lg:space-y-8">
           {/* Tabs Navigation - Mobile: 2 cols, Tablet: 3 cols, Desktop: 7 cols */}
-          <TabsList className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 bg-[#11243D] border-2 border-[#14B8A6]/30 p-1.5 md:p-2 rounded-[14px] gap-1 md:gap-0">
+          <TabsList className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 bg-[#11243D] border-2 border-[#14B8A6]/30 p-1.5 md:p-2 rounded-[14px] gap-1 md:gap-0 safe-area-bottom">
             <TabsTrigger 
               value="monitor" 
               className="data-[state=active]:bg-[#14B8A6] data-[state=active]:text-[#0A1A2F] text-[#E2E8F0] font-bold text-sm md:text-base lg:text-lg h-12 md:h-14 rounded-[12px] flex items-center justify-center gap-1 md:gap-2"
