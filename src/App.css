@@ -6,6 +6,12 @@
   padding: 0;
   text-align: left;
   min-height: 100vh;
+  /* Dynamic viewport height for mobile browsers */
+  min-height: 100dvh;
+  /* Fallback for older browsers */
+  min-height: -webkit-fill-available;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Mobile-First Typography (16px minimum) */
