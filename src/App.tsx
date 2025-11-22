@@ -21,7 +21,7 @@ import { ManipulationTimeline } from '@/components/voice/ManipulationTimeline'
 import { ScammerProfileCard } from '@/components/voice/ScammerProfileCard'
 import { DangerScoreGauge } from '@/components/voice/DangerScoreGauge'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const API_URL = import.meta.env.VITE_API_URL || 'https://cryptoshield-backend-i83o.onrender.com'
 
 interface VoiceAnalysisResult {
   scam_probability: number
@@ -130,14 +130,15 @@ interface DarkPatternResult {
 }
 
 interface NationalityPrediction {
+  predicted_region: string | null
+  confidence: number
+  linguistic_markers: string[]
   likely_origins: Array<{ country: string; probability: number }>
-  confidence: string
 }
 
 interface ThreatLevel {
-  level: string
-  color: string
-  score: number
+  threat_score: number
+  risk_level: string
   contributing_factors: string[]
 }
 
@@ -596,7 +597,9 @@ function App() {
       fetchStats()
     } catch (error) {
       console.error('[A-Series] ❌ Voice analysis error:', error)
-      alert(`Voice analysis failed: ${error instanceof Error ? error.message : 'Unknown error'}\n\nPlease check:\n1. Backend is running\n2. CORS is configured\n3. Network connection`)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      alert(`⚠️ Server is available, but AI returned no usable data. Retrying...\n\nError: ${errorMessage}\n\nPlease check:\n1. Backend is running at ${API_URL}\n2. CORS is configured\n3. Network connection`)
+      setIsMonitoring(false)
     }
   }
 
@@ -654,7 +657,8 @@ function App() {
       fetchStats()
     } catch (error) {
       console.error('[A-Series] ❌ Wallet risk check error:', error)
-      alert(`Wallet risk check failed: ${error instanceof Error ? error.message : 'Unknown error'}\n\nPlease check:\n1. Backend is running\n2. CORS is configured\n3. Wallet address format`)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      alert(`⚠️ Server is available, but AI returned no usable data. Retrying...\n\nError: ${errorMessage}\n\nPlease check:\n1. Backend is running at ${API_URL}\n2. CORS is configured\n3. Wallet address format`)
     }
   }
 
@@ -874,7 +878,7 @@ function App() {
     
     const profile: ScammerProfile = {
       voiceTraits: {
-        accent: nationalityData?.likely_origins[0]?.country || 'Unknown',
+        accent: nationalityData?.predicted_region || nationalityData?.likely_origins[0]?.country || 'Unknown',
         speed: darkPatternData?.pattern_list.includes('cognitive_overload') ? 'Fast' : 'Normal',
         pitch: 'Medium',
         dominance: darkPatternData?.pattern_list.includes('threat_tone') ? 'High' : 'Medium'
@@ -890,7 +894,7 @@ function App() {
         walletsUsed: walletAddress ? [walletAddress] : [],
         riskScore: walletRisk?.risk_score || 0
       },
-      likelyNationality: nationalityData || { likely_origins: [], confidence: 'low' },
+      likelyNationality: nationalityData || { predicted_region: null, confidence: 0, linguistic_markers: [], likely_origins: [] },
       scamPatternType: voiceAnalysis?.script_classification || 'Unknown'
     }
     
@@ -1563,17 +1567,17 @@ function App() {
                         <CardContent className="space-y-4 md:space-y-5">
                           <div className="text-center">
                             <div className={`text-3xl md:text-5xl lg:text-6xl font-bold mb-3 md:mb-4 ${
-                              threatLevel.level === 'SEVERE' ? 'text-black' :
-                              threatLevel.level === 'HIGH' ? 'text-[#EF4444]' :
-                              threatLevel.level === 'ELEVATED' ? 'text-[#FBBF24]' :
-                              threatLevel.level === 'GUARDED' ? 'text-[#FBBF24]' :
+                              threatLevel.risk_level === 'SEVERE' ? 'text-black' :
+                              threatLevel.risk_level === 'HIGH' ? 'text-[#EF4444]' :
+                              threatLevel.risk_level === 'ELEVATED' ? 'text-[#FBBF24]' :
+                              threatLevel.risk_level === 'GUARDED' ? 'text-[#FBBF24]' :
                               'text-[#22C55E]'
                             }`}>
-                              {threatLevel.level}
+                              {threatLevel.risk_level}
                             </div>
-                            <Progress value={threatLevel.score} className="h-4 md:h-6 mb-3 md:mb-4" />
+                            <Progress value={threatLevel.threat_score} className="h-4 md:h-6 mb-3 md:mb-4" />
                             <div className="text-lg md:text-xl lg:text-2xl font-bold text-white">
-                              Threat Score: {threatLevel.score}%
+                              Threat Score: {threatLevel.threat_score}%
                             </div>
                           </div>
                           {threatLevel.contributing_factors.length > 0 && (
