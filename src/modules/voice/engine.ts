@@ -258,6 +258,30 @@ export class VoiceAnalyzerEngine {
           threatening: emotionData.fear_level || 0,
           seduction: emotionData.compliance_probability || 0,
         };
+        
+        const emotionalSpikes = [
+          { label: 'Anger/Stress', value: this.emotions.anger, type: 'manipulation' as const },
+          { label: 'Calm Manipulation', value: this.emotions.calmManipulation, type: 'manipulation' as const },
+          { label: 'Gaslighting/Confusion', value: this.emotions.gaslighting, type: 'coercion' as const },
+          { label: 'Threatening/Fear', value: this.emotions.threatening, type: 'coercion' as const },
+          { label: 'Seduction/Compliance', value: this.emotions.seduction, type: 'grooming' as const },
+        ];
+        
+        emotionalSpikes.forEach(spike => {
+          if (spike.value > 10) {
+            const severity: TimelineEntry['severity'] = 
+              spike.value > 70 ? 'high' :
+              spike.value > 40 ? 'medium' : 'low';
+            
+            this.timeline.push({
+              timestamp: new Date(),
+              utterance: textToAnalyze.substring(0, 100),
+              interpretation: `${spike.label} spike detected: ${spike.value.toFixed(0)}%`,
+              severity,
+              type: spike.type,
+            });
+          }
+        });
 
         if (emotionData.stress_level > 70) {
           this.addAlert({
@@ -296,13 +320,32 @@ export class VoiceAnalyzerEngine {
       (this.emotions?.calmManipulation || 0) > 60 ? 'Calm Manipulation' :
       (this.emotions?.seduction || 0) > 60 ? 'Romance Scam' : 'Social Engineering';
 
+    const aggressionIndex = Math.min(100, Math.max(0, Math.round(
+      (this.emotions?.anger || 0) * 0.6 +
+      (this.emotions?.threatening || 0) * 0.8 +
+      (this.emotions?.gaslighting || 0) * 0.5 +
+      (this.emotions?.calmManipulation || 0) * 0.2 +
+      (this.emotions?.seduction || 0) * 0.2
+    ) / 2.3));
+    
+    const emotionalPatterns = [];
+    if ((this.emotions?.anger || 0) > 30) emotionalPatterns.push('aggressive');
+    if ((this.emotions?.threatening || 0) > 30) emotionalPatterns.push('threatening');
+    if ((this.emotions?.calmManipulation || 0) > 30) emotionalPatterns.push('manipulative');
+    if ((this.emotions?.gaslighting || 0) > 30) emotionalPatterns.push('gaslighting');
+    if ((this.emotions?.seduction || 0) > 30) emotionalPatterns.push('seductive');
+    
+    const emotionalPattern = emotionalPatterns.length > 0
+      ? `${emotionalPatterns.join(', ')} tactics with ${primaryTechnique.toLowerCase()}`
+      : 'High pressure with false authority';
+
     this.profile = {
       riskLevel,
       archetype,
       primaryTechnique,
       secondaryTechnique: 'Urgency Tactics',
-      emotionalPattern: 'High pressure with false authority',
-      aggressionIndex: Math.round((this.emotions?.anger || 0) + (this.emotions?.threatening || 0)) / 2,
+      emotionalPattern,
+      aggressionIndex,
     };
   }
 
