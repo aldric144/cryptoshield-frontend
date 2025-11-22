@@ -20,6 +20,7 @@ import { EmotionMeter } from '@/components/voice/EmotionMeter'
 import { ManipulationTimeline } from '@/components/voice/ManipulationTimeline'
 import { ScammerProfileCard } from '@/components/voice/ScammerProfileCard'
 import { DangerScoreGauge } from '@/components/voice/DangerScoreGauge'
+import { VoiceShieldRecorder } from './components/voice/VoiceShieldRecorder'
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://cryptoshield-backend-i83o.onrender.com'
 
@@ -1035,47 +1036,47 @@ function App() {
     }
   }
   
-  const startVoiceListening = () => {
-    if (!voiceEngineRef.current) return
-    
-    const tier = userSubscription?.subscription_tier || 'free'
-    const normalizedTier = normalizeTierName(tier)
-    
-    const sessionLimits = {
-      free: 20,
-      premium: 300,
-      ultra: Infinity,
-      enterprise: Infinity,
-    }
-    
-    const maxDuration = sessionLimits[normalizedTier as keyof typeof sessionLimits] || 20
-    
-    try {
-      voiceEngineRef.current.start()
-      
-      if (maxDuration !== Infinity) {
-        setTimeout(() => {
-          if (voiceEngineRef.current && voiceEngineState.isListening) {
-            voiceEngineRef.current.stop()
-            alert(`Session limit reached (${maxDuration} seconds). Upgrade to continue.`)
-          }
-        }, maxDuration * 1000)
-      }
-    } catch (error) {
-      console.error('Failed to start voice listening:', error)
-      alert('Web Speech API not supported in this browser. Please use Chrome or Edge.')
-    }
-  }
-  
-  const stopVoiceListening = () => {
-    if (!voiceEngineRef.current) return
-    voiceEngineRef.current.stop()
-  }
-  
-  const resetVoiceSession = () => {
-    if (!voiceEngineRef.current) return
-    voiceEngineRef.current.reset()
-  }
+  //   const startVoiceListening = () => {
+  //     if (!voiceEngineRef.current) return
+  //     
+  //     const tier = userSubscription?.subscription_tier || 'free'
+  //     const normalizedTier = normalizeTierName(tier)
+  //     
+  //     const sessionLimits = {
+  //       free: 20,
+  //       premium: 300,
+  //       ultra: Infinity,
+  //       enterprise: Infinity,
+  //     }
+  //     
+  //     const maxDuration = sessionLimits[normalizedTier as keyof typeof sessionLimits] || 20
+  //     
+  //     try {
+  //       voiceEngineRef.current.start()
+  //       
+  //       if (maxDuration !== Infinity) {
+  //         setTimeout(() => {
+  //           if (voiceEngineRef.current && voiceEngineState.isListening) {
+  //             voiceEngineRef.current.stop()
+  //             alert(`Session limit reached (${maxDuration} seconds). Upgrade to continue.`)
+  //           }
+  //         }, maxDuration * 1000)
+  //       }
+  //     } catch (error) {
+  //       console.error('Failed to start voice listening:', error)
+  //       alert('Web Speech API not supported in this browser. Please use Chrome or Edge.')
+  //     }
+  //   }
+  //   
+  //   const stopVoiceListening = () => {
+  //     if (!voiceEngineRef.current) return
+  //     voiceEngineRef.current.stop()
+  //   }
+  //   
+  //   const resetVoiceSession = () => {
+  //     if (!voiceEngineRef.current) return
+  //     voiceEngineRef.current.reset()
+  //   }
 
   useEffect(() => {
     fetchUserSubscription()
@@ -1264,7 +1265,7 @@ function App() {
             {/* Danger Alerts - Show at top when active */}
             <DangerAlerts alerts={voiceEngineState.alerts} />
             
-            {/* Voice Shield Control Card */}
+            {/* Voice Shield Recorder - Microphone Control */}
             <Card className="mobile-card bg-[#132B45] border-[#14B8A6]/30 border-2 rounded-[14px] hover:shadow-[0_0_12px_#14B8A6] transition-shadow">
               <CardHeader className="pb-4 md:pb-6">
                 <CardTitle className="text-white text-xl md:text-2xl lg:text-3xl font-bold flex items-center gap-2 md:gap-3">
@@ -1277,83 +1278,13 @@ function App() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4 md:space-y-6">
-                {/* Device Status */}
-                {voiceEngineState.isListening && (
-                  <Alert className="bg-[#14B8A6]/20 border-[#14B8A6] border-2">
-                    <Mic className="h-5 w-5 text-[#14B8A6] animate-pulse" />
-                    <AlertTitle className="text-white font-bold text-base md:text-lg">
-                      🎙️ Recording Active - {Math.floor(voiceEngineState.sessionDuration / 60)}:{(voiceEngineState.sessionDuration % 60).toString().padStart(2, '0')}
-                    </AlertTitle>
-                    <AlertDescription className="text-[#CFFAFE] text-sm md:text-base">
-                      Analyzing voice patterns in real-time every 5 seconds
-                    </AlertDescription>
-                  </Alert>
-                )}
-                
-                {/* Subscription Status */}
-                {userSubscription && (
-                  <div className="bg-[#0A1A2F] border border-[#14B8A6]/30 rounded-[10px] p-3 md:p-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="text-white font-bold text-sm md:text-base">
-                          {userSubscription.subscription_tier === 'free' && '🔒 FREE - 20 Second Limit'}
-                          {userSubscription.subscription_tier === 'premium' && '✅ PRO - 5 Minute Sessions'}
-                          {userSubscription.subscription_tier === 'ultra' && '⭐ ELITE - Unlimited + Advanced Tools'}
-                        </div>
-                        <div className="text-[#CFFAFE] text-xs md:text-sm mt-1">
-                          {userSubscription.subscription_tier === 'free' && 'Upgrade to unlock longer sessions'}
-                          {userSubscription.subscription_tier === 'premium' && 'Full voice analysis enabled'}
-                          {userSubscription.subscription_tier === 'ultra' && 'All advanced features unlocked'}
-                        </div>
-                      </div>
-                      {userSubscription.subscription_tier === 'free' && (
-                        <Button 
-                          onClick={() => setActiveTab('subscription')}
-                          className="bg-[#14B8A6] hover:bg-[#14B8A6]/90 text-[#0A1A2F] font-bold text-xs md:text-sm px-3 md:px-4 py-2"
-                        >
-                          Upgrade
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                )}
-                
-                {/* Large Microphone Button */}
-                <div className="flex flex-col items-center gap-4 py-4 md:py-6">
-                  {!voiceEngineState.isListening ? (
-                    <Button 
-                      onClick={startVoiceListening}
-                      className="w-full max-w-md h-16 md:h-20 bg-[#14B8A6] hover:bg-[#14B8A6]/90 text-[#0A1A2F] font-bold text-lg md:text-xl rounded-[16px] shadow-[0_0_20px_#14B8A6] transition-all hover:scale-105"
-                    >
-                      <Mic className="w-6 h-6 md:w-8 md:h-8 mr-3" />
-                      Start Voice Shield™
-                    </Button>
-                  ) : (
-                    <Button 
-                      onClick={stopVoiceListening}
-                      className="w-full max-w-md h-16 md:h-20 bg-[#EF4444] hover:bg-[#EF4444]/90 text-white font-bold text-lg md:text-xl rounded-[16px] shadow-[0_0_20px_#EF4444] transition-all hover:scale-105 animate-pulse"
-                    >
-                      <Activity className="w-6 h-6 md:w-8 md:h-8 mr-3" />
-                      Stop Recording
-                    </Button>
-                  )}
-                  <Button 
-                    onClick={resetVoiceSession}
-                    variant="outline"
-                    className="border-[#14B8A6] text-[#14B8A6] hover:bg-[#14B8A6]/10 font-bold text-sm md:text-base px-6 md:px-8 py-2 md:py-3 rounded-[12px]"
-                  >
-                    Reset Session
-                  </Button>
-                </div>
-                
-                {/* Background AI Processing Indicator */}
-                {voiceEngineState.isListening && (
-                  <div className="flex items-center justify-center gap-2 text-[#14B8A6] text-sm md:text-base">
-                    <div className="w-2 h-2 bg-[#14B8A6] rounded-full animate-pulse"></div>
-                    <span>AI Processing Active</span>
-                    <div className="w-2 h-2 bg-[#14B8A6] rounded-full animate-pulse" style={{animationDelay: '0.5s'}}></div>
-                  </div>
-                )}
+                <VoiceShieldRecorder
+                  apiUrl={API_URL}
+                  subscriptionTier={userSubscription?.subscription_tier || 'free'}
+                  onStateUpdate={setVoiceEngineState}
+                  onFreezeModeActivate={activateManualFreezeMode}
+                  nightModeActive={nightModeActive}
+                />
               </CardContent>
             </Card>
             
