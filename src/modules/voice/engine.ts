@@ -73,9 +73,11 @@ export class VoiceAnalyzerEngine {
   private callback: VoiceEngineCallback | null = null;
   private apiUrl: string;
   private buffer: string = '';
+  private analyzeIntervalMs: number;
 
-  constructor(apiUrl: string) {
+  constructor(apiUrl: string, analyzeIntervalMs: number = 5000) {
     this.apiUrl = apiUrl;
+    this.analyzeIntervalMs = analyzeIntervalMs;
   }
 
   public setCallback(callback: VoiceEngineCallback) {
@@ -110,7 +112,7 @@ export class VoiceAnalyzerEngine {
 
       this.analysisInterval = setInterval(() => {
         this.performAnalysis();
-      }, 5000);
+      }, this.analyzeIntervalMs);
     };
 
     this.recognition.onresult = (event: any) => {
