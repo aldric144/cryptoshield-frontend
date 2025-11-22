@@ -4,7 +4,6 @@ import { Shield, MapPin, FileText, AlertTriangle, Activity, TrendingUp, Plus, Tr
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Progress } from '@/components/ui/progress'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -20,6 +19,7 @@ import { EmotionMeter } from '@/components/voice/EmotionMeter'
 import { ManipulationTimeline } from '@/components/voice/ManipulationTimeline'
 import { ScammerProfileCard } from '@/components/voice/ScammerProfileCard'
 import { DangerScoreGauge } from '@/components/voice/DangerScoreGauge'
+import { VoiceShieldRecorder } from '@/components/voice/VoiceShieldRecorder'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
@@ -498,6 +498,7 @@ function App() {
     setFilteredScamWallets(filtered)
   }
 
+  /*
   const analyzeVoice = async () => {
     if (!callText.trim()) return
     
@@ -599,6 +600,7 @@ function App() {
       alert(`Voice analysis failed: ${error instanceof Error ? error.message : 'Unknown error'}\n\nPlease check:\n1. Backend is running\n2. CORS is configured\n3. Network connection`)
     }
   }
+  */
 
   const checkWalletRisk = async () => {
     if (!walletAddress.trim()) return
@@ -1380,7 +1382,7 @@ function App() {
             <ScanPage />
           </TabsContent>
 
-          {/* MONITOR TAB - Mobile First (Manual Analysis Only) */}
+          {/* MONITOR TAB - Mobile First (Live Voice Recording) */}
           <TabsContent value="monitor" className="min-h-[100dvh] pt-4 pb-6 space-y-4 md:space-y-6 lg:space-y-8">
             <Card className="mobile-card bg-[#132B45] border-[#14B8A6]/30 border-2 rounded-[14px] hover:shadow-[0_0_12px_#14B8A6] transition-shadow">
               <CardHeader className="pb-4 md:pb-6">
@@ -1394,26 +1396,13 @@ function App() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4 md:space-y-6">
-                <div>
-                  <label className="text-white text-base md:text-lg font-medium mb-2 md:mb-3 block">Call Transcript / Audio Text</label>
-                  <div className="relative">
-                    <Mic className="absolute left-3 md:left-4 top-3 md:top-4 w-4 h-4 md:w-5 md:h-5 text-[#A1A1AA]" />
-                    <Textarea
-                      value={callText}
-                      onChange={(e) => setCallText(e.target.value)}
-                      placeholder="Enter call transcript or paste conversation text here..."
-                      className="min-h-32 md:min-h-40 bg-[#11243D] border-2 border-[#14B8A6]/30 focus:border-[#14B8A6] text-white placeholder:text-[#A1A1AA] text-base md:text-lg pl-10 md:pl-12 rounded-[10px] leading-relaxed"
-                      style={{ lineHeight: '1.6' }}
-                    />
-                  </div>
-                  <Button 
-                    onClick={analyzeVoice}
-                    className="mobile-button bg-[#14B8A6] hover:bg-[#14B8A6]/90 text-[#0A1A2F] font-bold text-base md:text-lg rounded-[12px] shadow-[0_0_12px_#14B8A6] mt-3"
-                  >
-                    <Activity className="w-4 h-4 md:w-5 md:h-5 mr-2" />
-                    Analyze Text
-                  </Button>
-                </div>
+                <VoiceShieldRecorder
+                  apiUrl={API_URL}
+                  subscriptionTier={userSubscription?.subscription_tier || 'free'}
+                  onStateUpdate={setVoiceEngineState}
+                  onFreezeModeActivate={activateManualFreezeMode}
+                  nightModeActive={nightModeActive}
+                />
               </CardContent>
             </Card>
             
