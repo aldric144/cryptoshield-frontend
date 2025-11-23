@@ -209,97 +209,57 @@ export class VoiceAnalyzerEngine {
     this.inFlightAnalysis = true;
 
     try {
-      const voiceResponse = await fetch(`${this.apiUrl}/api/voice-analysis`, {
+      const analyzeResponse = await fetch(`${this.apiUrl}/api/analyze-text`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          call_id: 'voice-session-' + Date.now(),
-          user_id: 'demo-user',
-          audio_text: textToAnalyze,
+          text: textToAnalyze,
         }),
       });
 
-      if (voiceResponse.ok) {
-        const voiceData = await voiceResponse.json();
-        this.deceptionProbability = voiceData.scam_probability || 0;
-
-        if (voiceData.scam_probability > 50) {
-          this.timeline.push({
-            timestamp: new Date(),
-            utterance: textToAnalyze.substring(0, 100),
-            interpretation: voiceData.script_classification || 'Suspicious pattern detected',
-            severity: voiceData.scam_probability > 80 ? 'critical' : voiceData.scam_probability > 60 ? 'high' : 'medium',
-            type: 'manipulation',
-          });
-
-          if (voiceData.scam_probability > 70) {
-            this.addAlert({
+      if (analyzeResponse.ok) {
+        const analysisData = await analyzeResponse.json();
+        
+        this.deceptionProbability = (analysisData.scam_probability || 0) * 100;
+        
+        this.dangerScore = analysisData.danger_score || 0;
+        
+        if (analysisData.emotional_tone) {
+          this.emotions = {
+            anger: (analysisData.emotional_tone.anger || 0) * 100,
+            calmManipulation: (analysisData.emotional_tone.calm_manipulation || 0) * 100,
+            gaslighting: (analysisData.emotional_tone.gaslighting || 0) * 100,
+            threatening: (analysisData.emotional_tone.threatening || 0) * 100,
+            seduction: (analysisData.emotional_tone.seduction || 0) * 100,
+          };
+        }
+        
+        if (analysisData.manipulation_timeline && Array.isArray(analysisData.manipulation_timeline)) {
+          for (const event of analysisData.manipulation_timeline) {
+            this.timeline.push({
+              timestamp: new Date(event.timestamp || Date.now()),
+              utterance: textToAnalyze.substring(0, 100),
+              interpretation: event.label || 'Manipulation detected',
+              severity: event.intensity > 0.8 ? 'critical' : event.intensity > 0.6 ? 'high' : event.intensity > 0.4 ? 'medium' : 'low',
               type: 'manipulation',
-              message: '⚠️ Manipulation Detected - High scam probability',
             });
           }
         }
-      }
-
-      const emotionResponse = await fetch(`${this.apiUrl}/api/emotional-analysis`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          call_id: 'voice-session-' + Date.now(),
-          user_id: 'demo-user',
-          audio_text: textToAnalyze,
-        }),
-      });
-
-      if (emotionResponse.ok) {
-        const emotionData = await emotionResponse.json();
-        this.emotions = {
-          anger: emotionData.stress_level || 0,
-          calmManipulation: emotionData.manipulation_index || 0,
-          gaslighting: emotionData.confusion_level || 0,
-          threatening: emotionData.fear_level || 0,
-          seduction: emotionData.compliance_probability || 0,
-        };
         
-        const emotionalSpikes = [
-          { label: 'Anger/Stress', value: this.emotions.anger, type: 'manipulation' as const },
-          { label: 'Calm Manipulation', value: this.emotions.calmManipulation, type: 'manipulation' as const },
-          { label: 'Gaslighting/Confusion', value: this.emotions.gaslighting, type: 'coercion' as const },
-          { label: 'Threatening/Fear', value: this.emotions.threatening, type: 'coercion' as const },
-          { label: 'Seduction/Compliance', value: this.emotions.seduction, type: 'grooming' as const },
-        ];
-        
-        emotionalSpikes.forEach(spike => {
-          if (spike.value > 10) {
-            const severity: TimelineEntry['severity'] = 
-              spike.value > 70 ? 'high' :
-              spike.value > 40 ? 'medium' : 'low';
-            
-            this.timeline.push({
-              timestamp: new Date(),
-              utterance: textToAnalyze.substring(0, 100),
-              interpretation: `${spike.label} spike detected: ${spike.value.toFixed(0)}%`,
-              severity,
-              type: spike.type,
-            });
-          }
-        });
-
-        if (emotionData.stress_level > 70) {
+        if (this.dangerScore > 70) {
+          this.addAlert({
+            type: 'manipulation',
+            message: '⚠️ High Danger Detected - ' + (analysisData.summary || 'Scam pattern identified'),
+          });
+        } else if (this.dangerScore > 50) {
           this.addAlert({
             type: 'urgency',
-            message: '🚨 Urgency Scam Pattern - High stress detected',
+            message: '🚨 Moderate Risk - ' + (analysisData.summary || 'Suspicious activity detected'),
           });
         }
+        
+        this.updateProfile();
       }
-
-      this.dangerScore = Math.round(
-        (this.deceptionProbability * 0.5) +
-        ((this.emotions?.anger || 0) * 0.2) +
-        ((this.emotions?.threatening || 0) * 0.3)
-      );
-
-      this.updateProfile();
 
       this.notifyCallback();
     } catch (error) {
@@ -321,33 +281,29 @@ export class VoiceAnalyzerEngine {
       (this.emotions?.anger || 0) > 60 ? 'Intimidation' :
       (this.emotions?.calmManipulation || 0) > 60 ? 'Calm Manipulation' :
       (this.emotions?.seduction || 0) > 60 ? 'Romance Scam' : 'Social Engineering';
-
-    const aggressionIndex = Math.min(100, Math.max(0, Math.round(
-      (this.emotions?.anger || 0) * 0.6 +
-      (this.emotions?.threatening || 0) * 0.8 +
-      (this.emotions?.gaslighting || 0) * 0.5 +
-      (this.emotions?.calmManipulation || 0) * 0.2 +
-      (this.emotions?.seduction || 0) * 0.2
-    ) / 2.3));
     
-    const emotionalPatterns = [];
-    if ((this.emotions?.anger || 0) > 30) emotionalPatterns.push('aggressive');
-    if ((this.emotions?.threatening || 0) > 30) emotionalPatterns.push('threatening');
-    if ((this.emotions?.calmManipulation || 0) > 30) emotionalPatterns.push('manipulative');
-    if ((this.emotions?.gaslighting || 0) > 30) emotionalPatterns.push('gaslighting');
-    if ((this.emotions?.seduction || 0) > 30) emotionalPatterns.push('seductive');
+    const secondaryTechnique = 
+      (this.emotions?.threatening || 0) > 50 ? 'Fear Manipulation' :
+      (this.emotions?.gaslighting || 0) > 50 ? 'Gaslighting' : 'Urgency Tactics';
     
-    const emotionalPattern = emotionalPatterns.length > 0
-      ? `${emotionalPatterns.join(', ')} tactics with ${primaryTechnique.toLowerCase()}`
+    const patterns = [];
+    if ((this.emotions?.anger || 0) > 30) patterns.push('aggressive');
+    if ((this.emotions?.threatening || 0) > 30) patterns.push('threatening');
+    if ((this.emotions?.gaslighting || 0) > 30) patterns.push('gaslighting');
+    if ((this.emotions?.calmManipulation || 0) > 30) patterns.push('manipulative');
+    if ((this.emotions?.seduction || 0) > 30) patterns.push('seductive');
+    
+    const emotionalPattern = patterns.length > 0 
+      ? patterns.join(', ') + ' tactics detected'
       : 'High pressure with false authority';
 
     this.profile = {
       riskLevel,
       archetype,
       primaryTechnique,
-      secondaryTechnique: 'Urgency Tactics',
+      secondaryTechnique,
       emotionalPattern,
-      aggressionIndex,
+      aggressionIndex: Math.round(((this.emotions?.anger || 0) + (this.emotions?.threatening || 0)) / 2),
     };
   }
 
