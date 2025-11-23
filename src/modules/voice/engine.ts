@@ -297,25 +297,6 @@ export class VoiceAnalyzerEngine {
       ? patterns.join(', ') + ' tactics detected'
       : 'High pressure with false authority';
 
-    const aggressionIndex = Math.min(100, Math.max(0, Math.round(
-      (this.emotions?.anger || 0) * 0.6 +
-      (this.emotions?.threatening || 0) * 0.8 +
-      (this.emotions?.gaslighting || 0) * 0.5 +
-      (this.emotions?.calmManipulation || 0) * 0.2 +
-      (this.emotions?.seduction || 0) * 0.2
-    ) / 2.3));
-    
-    const emotionalPatterns = [];
-    if ((this.emotions?.anger || 0) > 30) emotionalPatterns.push('aggressive');
-    if ((this.emotions?.threatening || 0) > 30) emotionalPatterns.push('threatening');
-    if ((this.emotions?.calmManipulation || 0) > 30) emotionalPatterns.push('manipulative');
-    if ((this.emotions?.gaslighting || 0) > 30) emotionalPatterns.push('gaslighting');
-    if ((this.emotions?.seduction || 0) > 30) emotionalPatterns.push('seductive');
-    
-    const emotionalPattern = emotionalPatterns.length > 0
-      ? `${emotionalPatterns.join(', ')} tactics with ${primaryTechnique.toLowerCase()}`
-      : 'High pressure with false authority';
-
     this.profile = {
       riskLevel,
       archetype,
