@@ -252,11 +252,11 @@ export class VoiceAnalyzerEngine {
       if (emotionResponse.ok) {
         const emotionData = await emotionResponse.json();
         this.emotions = {
-          anger: emotionData.stress_level || 0,
-          calmManipulation: emotionData.manipulation_index || 0,
-          gaslighting: emotionData.confusion_level || 0,
-          threatening: emotionData.fear_level || 0,
-          seduction: emotionData.compliance_probability || 0,
+          anger: emotionData.anger || 0,
+          calmManipulation: emotionData.calm_manipulation || 0,
+          gaslighting: emotionData.gaslighting || 0,
+          threatening: emotionData.threatening || 0,
+          seduction: emotionData.seduction || 0,
         };
 
         if (emotionData.stress_level > 70) {
